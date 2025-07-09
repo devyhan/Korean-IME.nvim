@@ -10,30 +10,140 @@ M.mode = "en"
 -- stylua: ignore start
 -- TABLE{I,M,F} -- tables for initial, medial, final jamos
 --                     0     1     2     3     4     5     6     7     8     9
-local TABLEI = { [0]='ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ',
-                     'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'}
-local TABLEM = { [0]='ㅏ', 'ㅐ', 'ㅑ', 'ㅒ', 'ㅓ', 'ㅔ', 'ㅕ', 'ㅖ', 'ㅗ', 'ㅘ',
-                     'ㅙ', 'ㅚ', 'ㅛ', 'ㅜ', 'ㅝ', 'ㅞ', 'ㅟ', 'ㅠ', 'ㅡ', 'ㅢ',
-                     'ㅣ'}
-local TABLEF = { [0]='ㄱ', 'ㄲ', 'ㄳ', 'ㄴ', 'ㄵ', 'ㄶ', 'ㄷ', 'ㄹ', 'ㄺ', 'ㄻ',
-                     'ㄼ', 'ㄽ', 'ㄾ', 'ㄿ', 'ㅀ', 'ㅁ', 'ㅂ', 'ㅄ', 'ㅅ', 'ㅆ',
-                     'ㅇ', 'ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'}
+local TABLEI = {
+  [0] = 'ㄱ',
+  'ㄲ',
+  'ㄴ',
+  'ㄷ',
+  'ㄸ',
+  'ㄹ',
+  'ㅁ',
+  'ㅂ',
+  'ㅃ',
+  'ㅅ',
+  'ㅆ',
+  'ㅇ',
+  'ㅈ',
+  'ㅉ',
+  'ㅊ',
+  'ㅋ',
+  'ㅌ',
+  'ㅍ',
+  'ㅎ'
+}
+local TABLEM = {
+  [0] = 'ㅏ',
+  'ㅐ',
+  'ㅑ',
+  'ㅒ',
+  'ㅓ',
+  'ㅔ',
+  'ㅕ',
+  'ㅖ',
+  'ㅗ',
+  'ㅘ',
+  'ㅙ',
+  'ㅚ',
+  'ㅛ',
+  'ㅜ',
+  'ㅝ',
+  'ㅞ',
+  'ㅟ',
+  'ㅠ',
+  'ㅡ',
+  'ㅢ',
+  'ㅣ'
+}
+local TABLEF = {
+  [0] = 'ㄱ',
+  'ㄲ',
+  'ㄳ',
+  'ㄴ',
+  'ㄵ',
+  'ㄶ',
+  'ㄷ',
+  'ㄹ',
+  'ㄺ',
+  'ㄻ',
+  'ㄼ',
+  'ㄽ',
+  'ㄾ',
+  'ㄿ',
+  'ㅀ',
+  'ㅁ',
+  'ㅂ',
+  'ㅄ',
+  'ㅅ',
+  'ㅆ',
+  'ㅇ',
+  'ㅈ',
+  'ㅊ',
+  'ㅋ',
+  'ㅌ',
+  'ㅍ',
+  'ㅎ'
+}
 
 -- TABLEC{M,F} -- mappings from keystrokes to medial/final compounds
 --                Key consists of two elements (A * 100 + B).
-local TABLECM = { [800]=9, [801]=10, [820]=11, [1304]=14, [1305]=15, [1320]=16,
-                  [1820]=19}
-local TABLECF = { [0]=1, [18]=2, [321]=4, [326]=5, [700]=8, [715]=9, [716]=10,
-                  [718]=11, [724]=12, [725]=13, [726]=14, [1618]=17, [1818]=19}
+local TABLECM = {
+  [800] = 9,
+  [801] = 10,
+  [820] = 11,
+  [1304] = 14,
+  [1305] = 15,
+  [1320] = 16,
+  [1820] = 19
+}
+local TABLECF = {
+  [0] = 1,
+  [18] = 2,
+  [321] = 4,
+  [326] = 5,
+  [700] = 8,
+  [715] = 9,
+  [716] = 10,
+  [718] = 11,
+  [724] = 12,
+  [725] = 13,
+  [726] = 14,
+  [1618] = 17,
+  [1818] = 19
+}
 
 -- TABLEFC -- reverse mapping from final jamo to compound elements & initial jamo
 -- Legend: (A * 100 + B) * 100 + C
 --         A and B are compound elements; if not compound, A should be 99.
 --         C is equivalent initial jamo # or 99 (no equivalent jamo).
-local TABLEFC = { [0]=990000,      1,    999, 990202,  31299,  31899, 990303, 990505,
-                       70099,  70699,  70799,  70999,  71699,  71799,  71899, 990606,
-                      990707, 160999, 990909, 180910, 991111, 991212, 991414, 991515,
-                      991616, 991717, 991818}
+local TABLEFC = {
+  [0] = 990000,
+  1,
+  999,
+  990202,
+  31299,
+  31899,
+  990303,
+  990505,
+  70099,
+  70699,
+  70799,
+  70999,
+  71699,
+  71799,
+  71899,
+  990606,
+  990707,
+  160999,
+  990909,
+  180910,
+  991111,
+  991212,
+  991414,
+  991515,
+  991616,
+  991717,
+  991818
+}
 -- stylua: ignore end
 
 ---Get a Hangeul syllable from serial (-1 to 11171)
@@ -43,8 +153,8 @@ local function get_syllable(serial)
   else
     local code = 44033 + serial
     local s = vim.fn.nr2char(224 + math.floor(code / 4096))
-      .. vim.fn.nr2char(128 + math.floor(code / 64) % 64)
-      .. vim.fn.nr2char(128 + code % 64)
+        .. vim.fn.nr2char(128 + math.floor(code / 64) % 64)
+        .. vim.fn.nr2char(128 + code % 64)
     return vim.fn.iconv(s, "utf-8", vim.o.enc)
   end
 end
@@ -95,13 +205,70 @@ end
 --         Consonant otherwise, where A is initial # and B is final # (or 99)
 
 -- stylua: ignore start
-local MAP2s = { [0]=615, 9917, 1422, 1120,  499,  507, 1826, 9908, 9902, 9904,
-                   9900, 9920, 9918, 9913, 9903, 9907,  899,  101,  203, 1019,
-                   9906, 1725, 1399, 1624, 9912, 1523,   -1,   -1,   -1,   -1,
-                     -1,   -1,  615, 9917, 1422, 1120,  306,  507, 1826, 9908,
-                   9902, 9904, 9900, 9920, 9918, 9913, 9901, 9905,  716,    0,
-                    203,  918, 9906, 1725, 1221, 1624, 9912, 1523,   -1,   -1,
-                     -1,   -1}
+local MAP2s = {
+  [0] = 615,
+  9917,
+  1422,
+  1120,
+  499,
+  507,
+  1826,
+  9908,
+  9902,
+  9904,
+  9900,
+  9920,
+  9918,
+  9913,
+  9903,
+  9907,
+  899,
+  101,
+  203,
+  1019,
+  9906,
+  1725,
+  1399,
+  1624,
+  9912,
+  1523,
+  -1,
+  -1,
+  -1,
+  -1,
+  -1,
+  -1,
+  615,
+  9917,
+  1422,
+  1120,
+  306,
+  507,
+  1826,
+  9908,
+  9902,
+  9904,
+  9900,
+  9920,
+  9918,
+  9913,
+  9901,
+  9905,
+  716,
+  0,
+  203,
+  918,
+  9906,
+  1725,
+  1221,
+  1624,
+  9912,
+  1523,
+  -1,
+  -1,
+  -1,
+  -1
+}
 -- stylua: ignore end
 
 local function begin_2s()
@@ -258,29 +425,34 @@ M.change_mode = function()
 end
 
 M.essential_mappings = function()
-  local key = 33
-  while key < 127 do
-    vim.keymap.set(
-      "i",
-      "<Char-" .. key .. ">",
-      (function(k)
-        return function()
-          return compose(k) -- Uses the value of k at the time of function creation
-        end
-      end)(key),
-      { silent = true, expr = true, noremap = true, desc = "Korean-IME.nvim compose" }
-    )
-    key = key + 1
-  end
+  local modes = { "i", "t" }
+  
+  for _, mode in ipairs(modes) do
+    local key = 33
+    while key < 127 do
+      vim.keymap.set(
+        mode,
+        "<Char-" .. key .. ">",
+        (function(k)
+          return function()
+            return compose(k) -- Uses the value of k at the time of function creation
+          end
+        end)(key),
+        { silent = true, expr = true, noremap = true, desc = "Korean-IME.nvim compose" }
+      )
+      key = key + 1
+    end
 
-  vim.keymap.set("i", "<BS>", function()
-    return revert()
-  end, { noremap = true, silent = true, expr = true, desc = "Korean-IME.nvim backspace" })
-  -- This is an unusal key (same as <BS>), thus the fact that a mapping exists probabily means we should not remap it.
-  if vim.fn.maparg("<C-H>") == "" then
-    vim.keymap.set("i", "<C-H>", function()
+    vim.keymap.set(mode, "<BS>", function()
       return revert()
     end, { noremap = true, silent = true, expr = true, desc = "Korean-IME.nvim backspace" })
+    
+    -- This is an unusal key (same as <BS>), thus the fact that a mapping exists probabily means we should not remap it.
+    if vim.fn.maparg("<C-H>", mode) == "" then
+      vim.keymap.set(mode, "<C-H>", function()
+        return revert()
+      end, { noremap = true, silent = true, expr = true, desc = "Korean-IME.nvim backspace" })
+    end
   end
 
   local augroup = vim.api.nvim_create_augroup("Hangul", { clear = true })
@@ -295,6 +467,18 @@ M.essential_mappings = function()
     end,
   })
   vim.api.nvim_create_autocmd("InsertLeave", {
+    group = augroup,
+    callback = function()
+      finish(true)
+    end,
+  })
+  vim.api.nvim_create_autocmd("TermOpen", {
+    group = augroup,
+    callback = function()
+      begin(true)
+    end,
+  })
+  vim.api.nvim_create_autocmd("TermClose", {
     group = augroup,
     callback = function()
       finish(true)
