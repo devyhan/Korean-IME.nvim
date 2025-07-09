@@ -425,35 +425,73 @@ M.change_mode = function()
 end
 
 M.essential_mappings = function()
-  local modes = { "i", "t" }
-  
-  for _, mode in ipairs(modes) do
+  -- Insert mode mappings
+  local key = 33
+  while key < 127 do
+    vim.keymap.set(
+      "i",
+      "<Char-" .. key .. ">",
+      (function(k)
+        return function()
+          return compose(k) -- Uses the value of k at the time of function creation
+        end
+      end)(key),
+      { silent = true, expr = true, noremap = true, desc = "Korean-IME.nvim compose" }
+    )
+    key = key + 1
+  end
+
+  vim.keymap.set("i", "<BS>", function()
+    return revert()
+  end, { noremap = true, silent = true, expr = true, desc = "Korean-IME.nvim backspace" })
+
+  -- This is an unusal key (same as <BS>), thus the fact that a mapping exists probabily means we should not remap it.
+  if vim.fn.maparg("<C-H>", "i") == "" then
+    vim.keymap.set("i", "<C-H>", function()
+      return revert()
+    end, { noremap = true, silent = true, expr = true, desc = "Korean-IME.nvim backspace" })
+  end
+
+  -- Terminal mode mappings (different approach)
+  local function setup_terminal_mappings()
     local key = 33
     while key < 127 do
       vim.keymap.set(
-        mode,
-        "<Char-" .. key .. ">",
+        "t",
+        vim.fn.nr2char(key),
         (function(k)
           return function()
-            return compose(k) -- Uses the value of k at the time of function creation
+            local result = compose(k)
+            vim.api.nvim_feedkeys(result, "n", false)
           end
         end)(key),
-        { silent = true, expr = true, noremap = true, desc = "Korean-IME.nvim compose" }
+        { silent = true, noremap = true, desc = "Korean-IME.nvim terminal compose" }
       )
       key = key + 1
     end
 
-    vim.keymap.set(mode, "<BS>", function()
-      return revert()
-    end, { noremap = true, silent = true, expr = true, desc = "Korean-IME.nvim backspace" })
-    
-    -- This is an unusal key (same as <BS>), thus the fact that a mapping exists probabily means we should not remap it.
-    if vim.fn.maparg("<C-H>", mode) == "" then
-      vim.keymap.set(mode, "<C-H>", function()
-        return revert()
-      end, { noremap = true, silent = true, expr = true, desc = "Korean-IME.nvim backspace" })
+    vim.keymap.set("t", "<BS>", function()
+      local result = revert()
+      if result == "<C-H>" then
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<BS>", true, false, true), "n", false)
+      elseif result ~= "" then
+        vim.api.nvim_feedkeys(result, "n", false)
+      end
+    end, { noremap = true, silent = true, desc = "Korean-IME.nvim terminal backspace" })
+
+    if vim.fn.maparg("<C-H>", "t") == "" then
+      vim.keymap.set("t", "<C-H>", function()
+        local result = revert()
+        if result == "<C-H>" then
+          vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<BS>", true, false, true), "n", false)
+        elseif result ~= "" then
+          vim.api.nvim_feedkeys(result, "n", false)
+        end
+      end, { noremap = true, silent = true, desc = "Korean-IME.nvim terminal backspace" })
     end
   end
+
+  setup_terminal_mappings()
 
   local augroup = vim.api.nvim_create_augroup("Hangul", { clear = true })
   vim.api.nvim_create_autocmd("CursorMovedI", {
@@ -476,9 +514,23 @@ M.essential_mappings = function()
     group = augroup,
     callback = function()
       begin(true)
+      -- Re-setup terminal mappings for the new terminal
+      setup_terminal_mappings()
     end,
   })
   vim.api.nvim_create_autocmd("TermClose", {
+    group = augroup,
+    callback = function()
+      finish(true)
+    end,
+  })
+  vim.api.nvim_create_autocmd("TermEnter", {
+    group = augroup,
+    callback = function()
+      begin(true)
+    end,
+  })
+  vim.api.nvim_create_autocmd("TermLeave", {
     group = augroup,
     callback = function()
       finish(true)
